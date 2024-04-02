@@ -12,29 +12,35 @@ const restaurant = {
   starterMenu: ["Focaccia", "Bruschetta", "Garlic Bread", "Caprese Salad"],
   mainMenu: ["Pizza", "Pasta", "Risotto"],
 
+  openingHours: {
+    thu: {
+      open: 12,
+      close: 22
+    },
+    fri: {
+      open: 11,
+      close: 23
+    },
+    sat: {
+      open: 0, // Open 24 hours
+      close: 24
+    }
+  },
+
   order: function (starterIndex, mainIndex) {
     return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
   },
 
-  openingHours: {
-    thu: {
-      open: 12,
-      close: 22,
-    },
-    fri: {
-      open: 11,
-      close: 23,
-    },
-    sat: {
-      open: 0, // Open 24 hours
-      close: 24,
-    },
-  },
+  orderDelivery: function ({ time, address, mainIndex = 0, starterIndex = 0 }) {
+    console.log(
+      `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}.`
+    );
+  }
 };
 
 // Array Destructuring
 // -------------------
-const [first, second] = restaurant.categories;
+/* const [first, second] = restaurant.categories;
 console.log({ first, second }); // {first: 'Italian', second: 'Pizzeria'}
 
 let [primary, , secondary] = restaurant.categories;
@@ -54,4 +60,69 @@ console.log({ i, j, k }); // {i: 2, j: 5, k: 6}
 
 // Having default values when destructuring
 const [p = 0, q = 0, r = 0] = [8, 9];
-console.log({ p, q, r }); // {p: 8, q: 9, r: 0
+console.log({ p, q, r }); // {p: 8, q: 9, r: 0 */
+
+// Object Destructuring
+// --------------------
+const { name, categories, openingHours } = restaurant;
+console.log({ name, categories, openingHours });
+
+// Object Destructuring with different variable names
+const { name: newName } = restaurant;
+console.log({ newName });
+
+// Object Destructuring with default values
+const { menu = [] } = restaurant; // 'menu' property does not exist. So [] is assigned to 'menu'.
+console.log({ menu });
+
+// Mutating variables while destructuring
+let a = 111;
+let b = 999;
+const obj = { a: 23, b: 7, c: 14 };
+
+({ a, b } = obj); // Need to WRAP IN PARENTHESES to avoid syntax error
+console.log({ a, b });
+
+// Nested Object Destructuring
+const {
+  fri: { open, close }
+} = openingHours;
+console.log({ open, close });
+
+const {
+  sat: { open: satOpen, close: satClose }
+} = openingHours;
+console.log({ satOpen, satClose });
+
+// More Nested Object Destructuring
+const metadata = {
+  title: "Scratchpad",
+  translations: [
+    {
+      locale: "de",
+      localizationTags: [],
+      lastEdit: "2014-04-14T08:43:37",
+      url: "/de/docs/Tools/Scratchpad",
+      title: "JavaScript-Umgebung"
+    }
+  ],
+  url: "/en-US/docs/Tools/Scratchpad"
+};
+
+const {
+  translations: [{ title, url }]
+} = metadata;
+
+console.log({ title, url });
+
+// Unpacking properties from objects passed as a function parameter
+restaurant.orderDelivery({
+  time: "22:30",
+  address: "Via del Sole, 21",
+  mainIndex: 2,
+  starterIndex: 2
+});
+restaurant.orderDelivery({
+  time: "22:00",
+  address: "123 Main St"
+});
